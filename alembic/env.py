@@ -2,6 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from sqlalchemy.orm import declarative_base
 
 from alembic import context
 
@@ -11,6 +12,8 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from app.db.base import Base
 from app.models.user import User  # noqa
+
+Base = declarative_base()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
