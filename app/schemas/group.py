@@ -1,32 +1,22 @@
-from typing import Optional
+"""
+Schemas Pydantic para el modelo Group
+"""
 from pydantic import BaseModel
-from enum import Enum
-
-class GradeEnum(str, Enum):
-    first = "1ro"
-    second = "2do"
-    third = "3ro"
-    fourth = "4to"
-    fifth = "5to"
-    sixth = "6to"
-    kinder = "kinder"
-    prekinder = "prekinder"
-
-class LevelEnum(str, Enum):
-    initial = "initial"
-    primary = "primary"
-    secondary = "secondary"
+from app.models.enums import GradeEnum, LevelEnum
 
 class GroupBase(BaseModel):
+    """Schema base para Group"""
     grade: GradeEnum
     level: LevelEnum
-    group: str
+    group: str  # A, B, C, D, E, F
 
 class GroupCreate(GroupBase):
+    """Schema para crear grupos"""
     pass
 
 class GroupRead(GroupBase):
+    """Schema para leer grupos"""
     id: int
-
+    
     class Config:
-        from_attributes = True
+        orm_mode = True

@@ -13,10 +13,12 @@ from alembic import context
 # Importaciones estándar de Python necesarias para la ruta
 import os
 import sys
+from pathlib import Path
 
 # Añade el directorio raíz del proyecto al sys.path.
 # Esto DEBE ejecutarse ANTES de importar cualquier módulo desde 'app.*'
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+root_path = Path(__file__).parents[1].absolute()
+sys.path.insert(0, str(root_path))
 # --- FIN DE LA SECCIÓN DE RUTA ---
 
 
@@ -26,17 +28,16 @@ from app.db.base import Base # Asegúrate de que esta importación sea correcta
 
 # Importa TODOS tus modelos aquí. Esto es CRUCIAL para que Base.metadata
 # contenga la información de todas tus tablas y Alembic pueda detectarlas
-# para las migraciones automáticas ('autogenerate').
-# Estas importaciones ahora se ejecutarán DESPUÉS de que el directorio del proyecto se haya añadido a sys.path.
-from app.models.user import User  # noqa
-from app.models.student import Student # noqa
-from app.models.teacher import Teacher # noqa
-from app.models.admin import Admin # noqa
-from app.models.subject import Subject # noqa
-from app.models.period import Period # noqa
-from app.models.grade import Grade # noqa
-from app.models.attendance import Attendance # noqa
-from app.models.participation import Participation # noqa
+try:
+    from app.models.user import User  # noqa
+    from app.models.student import Student  # noqa
+    from app.models.subject import Subject  # noqa
+    from app.models.period import Period  # noqa
+    from app.models.group import Group  # noqa
+except ImportError as e:
+    print(f"Error importing models: {e}")
+    raise
+
 # Asegúrate de importar aquí cualquier otro modelo que hayas creado en app/models/
 # Por ejemplo:
 # from app.models.group import Group # noqa
@@ -100,7 +101,7 @@ def run_migrations_offline() -> None:
     )
 
     with context.begin_transaction():
-        context.run_sync()
+        context.run_migrations()
 
 
 def run_migrations_online() -> None:
@@ -122,7 +123,7 @@ def run_migrations_online() -> None:
         )
 
         with context.begin_transaction():
-            context.run_sync()
+            context.run_migrations()
 
 
 if context.is_offline_mode():

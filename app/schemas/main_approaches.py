@@ -15,7 +15,7 @@ class MainApproachesBase(BaseModel):
 class MainApproachesCreate(MainApproachesBase):
     pass
 
-class MainApproachesUpdate(MainApproachesBase):
+class MainApproachesUpdate(BaseModel):
     name: Optional[str] = None
     max_weight: Optional[Decimal] = None
 
