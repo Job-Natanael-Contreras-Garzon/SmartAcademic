@@ -1,22 +1,15 @@
-from typing import Optional
+# app/schemas/student.py (Actualizado)
 from pydantic import BaseModel
-from .user import UserRead
-from .group import GroupRead
 
 class StudentBase(BaseModel):
     user_id: int
-    group_id: Optional[int] = None
 
 class StudentCreate(StudentBase):
     pass
 
-class StudentUpdate(StudentBase):
-    pass
-
 class StudentRead(StudentBase):
     id: int
-    user: UserRead
-    group: Optional[GroupRead] = None
+    user_id: int # Incluir user_id para la respuesta
 
     class Config:
-        from_attributes = True
+        orm_mode = True

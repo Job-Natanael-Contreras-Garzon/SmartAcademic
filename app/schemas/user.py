@@ -1,41 +1,42 @@
-from typing import Optional
-from datetime import date, datetime
-from pydantic import BaseModel, EmailStr, validator
-from enum import Enum
-
-class GenderEnum(str, Enum):
-    female = "female"
-    male = "male"
-    other = "other"
-
-class RoleEnum(str, Enum):
-    student = "student"
-    teacher = "teacher"
-    patterns = "patterns"
-    administrator = "administrator"
+# app/schemas/user.py (Actualizado)
+from pydantic import BaseModel, EmailStr
+from datetime import date
+from app.core.roles import Role # Asegúrate de que Role está definido aquí o importado correctamente
 
 class UserBase(BaseModel):
-    code: str
+    code: str | None = None # Puede ser nulo al crear si se genera automáticamente
     name: str
     last_name: str
-    phone: Optional[str] = None
+    phone: str | None = None
     email: EmailStr
-    direction: Optional[str] = None
-    birthdate: Optional[date] = None
-    gender: Optional[GenderEnum] = None
-    ci: Optional[str] = None
-    role: RoleEnum
+    direction: str | None = None
+    birthdate: date | None = None
+    photo: str | None = None
+    gender: str | None = None # Considerar usar un Enum aquí también
+    ci: str | None = None # Cédula de identidad
+    role: Role # Usando el Enum de roles
 
 class UserCreate(UserBase):
+    # Puedes añadir campos específicos para la creación, como password
     password: str
-
-class UserUpdate(UserBase):
-    password: Optional[str] = None
 
 class UserRead(UserBase):
     id: int
-    photo: Optional[str] = None
-    last_access: Optional[datetime] = None
-    
+    last_access: date | None = None # Incluir campos que no están en Create pero sí en la BD
+
     class Config:
-        from_attributes = True  # Para compatibilidad con SQLAlchemy
+        orm_mode = True
+
+class UserUpdate(UserBase):
+    # Esquema para actualizar (todos los campos son opcionales)
+    code: str | None = None
+    name: str | None = None
+    last_name: str | None = None
+    phone: str | None = None
+    email: EmailStr | None = None
+    direction: str | None = None
+    birthdate: date | None = None
+    photo: str | None = None
+    gender: str | None = None
+    ci: str | None = None
+    role: Role | None = None
